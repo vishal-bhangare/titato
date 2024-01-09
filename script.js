@@ -1,5 +1,5 @@
 var board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-let difficulties = [5,3,1];
+let difficulties = [5, 3, 1];
 
 var iter = 0;
 var round = 0;
@@ -8,13 +8,13 @@ var human;
 var comp;
 
 const OMark = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true"
-style="fill: #55b4fa; width: 50px; height: 50px;">
+style="fill: #55b4fa; width: 100%; height: 100%;">
 <path
   d="M256 48C141.601 48 48 141.601 48 256s93.601 208 208 208 208-93.601 208-208S370.399 48 256 48zm0 374.399c-91.518 0-166.399-74.882-166.399-166.399S164.482 89.6 256 89.6 422.4 164.482 422.4 256 347.518 422.399 256 422.399z">
 </path>
 </svg>`
 const XMark = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true"
-style="fill:#f81b81; width: 50px; height: 50px;">
+style="fill:#f81b81; width: 100%; height: 100%;">
 <path
   d="M405 136.798L375.202 107 256 226.202 136.798 107 107 136.798 226.202 256 107 375.202 136.798 405 256 285.798 375.202 405 405 375.202 285.798 256z">
 </path>
@@ -24,25 +24,25 @@ const cells = [...document.querySelectorAll("table .cell")]
 const options = document.getElementById("options")
 const optionsBackdrop = document.getElementById("options-backdrop")
 
-options.addEventListener('submit', function (event) {
+options.addEventListener('submit', function(event) {
   event.preventDefault();
   var selectetValue = event.target["pieces"].value
   let difficultyLevel = difficulties[event.target["difficulty"].selectedIndex]
   if (selectetValue == "O") {
-   loadGame("O","X",difficultyLevel)
+    loadGame("O", "X", difficultyLevel)
   }
   else {
-    loadGame("X","O",difficultyLevel)
+    loadGame("X", "O", difficultyLevel)
   }
   optionsBackdrop.classList.add("hidden")
 });
 
-function loadGame(humanP,compP,diff){
+function loadGame(humanP, compP, diff) {
   human = humanP
   comp = compP
   difficulty = diff
- }
-cells.forEach((cell, i) => {
+}
+cells.forEach((cell, _i) => {
   cell.addEventListener("click", () => {
     move(cell, human);
   })
@@ -59,13 +59,13 @@ function move(element, player) {
     board[element.id] = player;
 
     if (winning(board, player)) {
-      setTimeout(function () {
+      setTimeout(function() {
         alert("YOU WIN");
         reset();
       }, 500);
       return;
     } else if (round > 8) {
-      setTimeout(function () {
+      setTimeout(function() {
         alert("TIE");
         reset();
       }, 500);
@@ -73,21 +73,23 @@ function move(element, player) {
     } else {
       round++;
       var index = minimax(board, comp).index;
-      cells[index].innerHTML = player != "X"  ? XMark : OMark;
-      board[index] = comp;
-      if (winning(board, comp)) {
-        setTimeout(function () {
-          alert("YOU LOSE");
-          reset();
-        }, 500);
-        return;
-      } else if (round === 0) {
-        setTimeout(function () {
-          alert("tie");
-          reset();
-        }, 500);
-        return;
-      }
+      setTimeout(() => {
+        cells[index].innerHTML = player != "X" ? XMark : OMark;
+        board[index] = comp;
+        if (winning(board, comp)) {
+          setTimeout(function() {
+            alert("YOU LOSE");
+            reset();
+          }, 500);
+          return;
+        } else if (round === 0) {
+          setTimeout(function() {
+            alert("tie");
+            reset();
+          }, 500);
+          return;
+        }
+      }, 500)
     }
   }
 }
@@ -121,7 +123,7 @@ function minimax(reboard, player) {
     var move = {};
     move.index = reboard[array[i]];
     reboard[array[i]] = player;
-    
+
     if (player == comp) {
       var g = minimax(reboard, human);
       move.score = g.score + getRandomInt(-difficulty, difficulty);
