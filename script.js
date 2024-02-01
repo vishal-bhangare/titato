@@ -6,25 +6,14 @@ var round = 0;
 var difficulty;
 var human;
 var comp;
+var isHumansTurn;
+const whosTurn = document.getElementById("playerMark");
 
-const OMark = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true"
-style="fill: #55b4fa; width: 100%; height: 100%;">
-<path
-  d="M256 48C141.601 48 48 141.601 48 256s93.601 208 208 208 208-93.601 208-208S370.399 48 256 48zm0 374.399c-91.518 0-166.399-74.882-166.399-166.399S164.482 89.6 256 89.6 422.4 164.482 422.4 256 347.518 422.399 256 422.399z">
-</path>
-</svg>`
-const XMark = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true"
-style="fill:#f81b81; width: 100%; height: 100%;">
-<path
-  d="M405 136.798L375.202 107 256 226.202 136.798 107 107 136.798 226.202 256 107 375.202 136.798 405 256 285.798 375.202 405 405 375.202 285.798 256z">
-</path>
-</svg>`
-
-const cells = [...document.querySelectorAll("table .cell")]
+const cells = [...document.querySelectorAll("#grid .cell")]
 const options = document.getElementById("options")
 const optionsBackdrop = document.getElementById("options-backdrop")
 
-options.addEventListener('submit', function(event) {
+options.addEventListener('submit', function (event) {
   event.preventDefault();
   var selectetValue = event.target["pieces"].value
   let difficultyLevel = difficulties[event.target["difficulty"].selectedIndex]
@@ -40,13 +29,21 @@ options.addEventListener('submit', function(event) {
 function loadGame(humanP, compP, diff) {
   human = humanP
   comp = compP
-  difficulty = diff
-}
-cells.forEach((cell, _i) => {
-  cell.addEventListener("click", () => {
-    move(cell, human);
+  difficulty = diff;
+  isHumansTurn = true;
+  cells.forEach((cell, _i) => {
+    cell.addEventListener("click", () => {
+      if (isHumansTurn) {
+        move(cell, human);
+        isHumansTurn = false;
+        whosTurn.innerHTML = human == "X" ? OMark : XMark;
+      }
+
+    })
   })
-})
+}
+
+
 
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -59,37 +56,40 @@ function move(element, player) {
     board[element.id] = player;
 
     if (winning(board, player)) {
-      setTimeout(function() {
+      setTimeout(function () {
         alert("YOU WIN");
         reset();
       }, 500);
       return;
     } else if (round > 8) {
-      setTimeout(function() {
+      setTimeout(function () {
         alert("TIE");
         reset();
       }, 500);
       return;
     } else {
+      whosTurn.innerHTML = comp == "X" ? XMark : OMark;
       round++;
       var index = minimax(board, comp).index;
       setTimeout(() => {
         cells[index].innerHTML = player != "X" ? XMark : OMark;
         board[index] = comp;
+        isHumansTurn = true;
+        whosTurn.innerHTML = comp == "X" ? OMark : XMark;
         if (winning(board, comp)) {
-          setTimeout(function() {
+          setTimeout(function () {
             alert("YOU LOSE");
             reset();
           }, 500);
           return;
         } else if (round === 0) {
-          setTimeout(function() {
+          setTimeout(function () {
             alert("tie");
             reset();
           }, 500);
           return;
         }
-      }, 500)
+      }, 750)
     }
   }
 }

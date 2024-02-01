@@ -7,57 +7,62 @@
 </head>
 
 <body>
-  <div class="box-content main bg-slate-100 w-screen h-screen flex items-center justify-center">
-
-    <table class="z-0">
-      <tr>
-        <td class="cell border border-slate-500 w-[50px] h-[50px] border-4" id="0"></td>
-        <td class="cell border border-slate-500 w-[50px] h-[50px] border-4" id="1"></td>
-        <td class="cell border border-slate-500 w-[50px] h-[50px] border-4" id="2"></td>
-      </tr>
-      <tr>
-        <td class="cell border border-slate-500 w-[50px] h-[50px] border-4" id="3"></td>
-        <td class="cell border border-slate-500 w-[50px] h-[50px] border-4" id="4"></td>
-        <td class="cell border border-slate-500 w-[50px] h-[50px] border-4" id="5"></td>
-      </tr>
-      <tr>
-        <td class="cell border border-slate-500 w-[50px] h-[50px] border-4" id="6"></td>
-        <td class="cell border border-slate-500 w-[50px] h-[50px] border-4" id="7"></td>
-        <td class="cell border border-slate-500 w-[50px] h-[50px] border-4" id="8"></td>
-      </tr>
-    </table>
+  <div class="box-content main bg-slate-100 w-screen h-screen flex flex-col items-center justify-center">
+    <div id="whosTurn" class="flex items-center mb-8">
+      <div id="playerMark" class="w-8"></div> Turn
+    </div>
+    <div id="grid" class="grid grid-rows-3 grid-cols-3 w-52 h-52 bg-slate-500 gap-1">
+      <div class="cell bg-slate-100" id="0"></div>
+      <div class="cell bg-slate-100" id="1"></div>
+      <div class="cell bg-slate-100" id="2"></div>
+      <div class="cell bg-slate-100" id="3"></div>
+      <div class="cell bg-slate-100" id="4"></div>
+      <div class="cell bg-slate-100" id="5"></div>
+      <div class="cell bg-slate-100" id="6"></div>
+      <div class="cell bg-slate-100" id="7"></div>
+      <div class="cell bg-slate-100" id="8"></div>
+    </div>
     <div id="options-backdrop" class="absolute  top-0 bg-white w-screen h-screen z-10 flex items-center justify-center">
-      <form class="w-fit flex flex-col border  border-slate-300 rounded bg-slate-100 p-5 gap-3 text-md" id="options">
+      <form
+        class="min-w-fit w-1/2 max-w-[300px] flex flex-col border  border-slate-300 rounded bg-slate-100 p-5 gap-3 text-md"
+        id="options">
 
-        <p>Choose your piece :</p>
-        <div class="flex gap-3">
-          <input type="radio" name="pieces" id="O" value="O" selected required>
-          <label for="O">
-            <svg class="w-6 h-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true">
-		<path
-                d="M256 48C141.601 48 48 141.601 48 256s93.601 208 208 208 208-93.601 208-208S370.399 48 256 48zm0 374.399c-91.518 0-166.399-74.882-166.399-166.399S164.482 89.6 256 89.6 422.4 164.482 422.4 256 347.518 422.399 256 422.399z">
-              </path>
-            </svg> 
-          </label>
-          <input type="radio" name="pieces" id="X" value="X">
-          <label for="X">
-             <svg class="w-6 h-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true">
-              <path
-                d="M405 136.798L375.202 107 256 226.202 136.798 107 107 136.798 226.202 256 107 375.202 136.798 405 256 285.798 375.202 405 405 375.202 285.798 256z">
-              </path>
-            </svg>
-          </label>
+        <p class="font-semibold">Choose your piece :</p>
+        <div class="flex gap-3 justify-around ">
+          <div class="flex gap-2">
+            <input type="radio" name="pieces" id="O" value="O" checked required>
+            <label for="O">
+              <svg class="w-6 h-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true">
+                <path
+                  d="M256 48C141.601 48 48 141.601 48 256s93.601 208 208 208 208-93.601 208-208S370.399 48 256 48zm0 374.399c-91.518 0-166.399-74.882-166.399-166.399S164.482 89.6 256 89.6 422.4 164.482 422.4 256 347.518 422.399 256 422.399z">
+                </path>
+              </svg>
+            </label>
+          </div>
+          <div class="flex gap-2">
+            <input type="radio" name="pieces" id="X" value="X">
+            <label for="X">
+              <svg class="w-6 h-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true">
+                <path
+                  d="M405 136.798L375.202 107 256 226.202 136.798 107 107 136.798 226.202 256 107 375.202 136.798 405 256 285.798 375.202 405 405 375.202 285.798 256z">
+                </path>
+              </svg>
+            </label>
+          </div>
         </div>
-        <label for="difficulty">Difficulty level :</label>
-        <select class="border border-slate-300" name="difficulty" id="difficulty">
+        <label for="difficulty" class="font-semibold">Difficulty level :</label>
+        <select class="border border-slate-300 px-2 py-1" name="difficulty" id="difficulty">
           <option>Easy</option>
           <option>Medium</option>
           <option>Hard</option>
         </select>
-        <button class="bg-slate-200  border border-gray-300 rounded font-semibold hover:bg-slate-300 transition">Start</button>
+        <button
+          class="bg-slate-200  border border-gray-300 rounded font-semibold hover:bg-slate-300 transition">Start</button>
       </form>
     </div>
+
   </div>
+  <script src="/assets/symbols.js"></script>
   <script src="script.js"></script>
 </body>
 
