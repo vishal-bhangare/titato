@@ -8,6 +8,11 @@
 
 <body>
   <div class="box-content main bg-slate-100 w-screen h-screen flex flex-col items-center justify-center">
+    <div class="scoreCard absolute flex flex-col top-0 right-0 m-2">
+      <span class="title font-semibold">Scores :</span>
+      <span id="human"></span>
+      <span id="comp"></span>
+    </div>
     <div id="whosTurn" class="flex items-center mb-8">
       <div id="playerMark" class="w-8"></div> Turn
     </div>
@@ -24,7 +29,7 @@
     </div>
     <div id="options-backdrop" class="absolute  top-0 bg-white w-screen h-screen z-10 flex items-center justify-center">
       <form
-        class="min-w-fit w-1/2 max-w-[300px] flex flex-col border  border-slate-300 rounded bg-slate-100 p-5 gap-3 text-md"
+        class="min-w-fit w-1/2 max-w-[300px] flex flex-col border border-slate-300 rounded bg-slate-100 p-5 gap-3 text-md"
         id="options">
 
         <p class="font-semibold">Choose your piece :</p>
@@ -60,7 +65,17 @@
           class="bg-slate-200  border border-gray-300 rounded font-semibold hover:bg-slate-300 transition">Start</button>
       </form>
     </div>
-
+    <div id="game-over-backdrop"
+      class="hidden absolute top-0 justify-center items-center w-full h-full bg-gray-100/[.8]">
+      <div id="game-over"
+        class="flex flex-col items-center bg-gray-200 px-12 py-10 gap-1 border rounded border-gray-300">
+        <div id="result" class="mb-4 font-semibold">Draw</div>
+        <button class="bg-gray-300 px-6 py-1.5 border rounded border-gray-300 hover:border-gray-400"
+          onclick="playAgain()">Play again</button>
+        <button class="bg-gray-300 px-6 py-1.5 border rounded border-gray-300 hover:border-gray-400"
+          onclick="openNewgameDialog()">New game</button>
+      </div>
+    </div>
   </div>
   <script src="./assets/symbols.js"></script>
   <script src="script.js"></script>

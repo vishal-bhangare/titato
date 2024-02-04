@@ -7,11 +7,18 @@ var difficulty;
 var human;
 var comp;
 var isHumansTurn;
+var winByHuman = localStorage.getItem("winByHuman");
+var winByComp = localStorage.getItem("winByComp");
+
 const whosTurn = document.getElementById("playerMark");
 
 const cells = [...document.querySelectorAll("#grid .cell")]
 const options = document.getElementById("options")
 const optionsBackdrop = document.getElementById("options-backdrop")
+const gameoverBackdrop = document.getElementById("game-over-backdrop")
+const gameoverMsg = document.querySelector("#game-over #result")
+const humanScore = document.querySelector(".scoreCard #human")
+const compScore = document.querySelector(".scoreCard #comp")
 
 options.addEventListener('submit', function (event) {
   event.preventDefault();
@@ -26,11 +33,29 @@ options.addEventListener('submit', function (event) {
   optionsBackdrop.classList.add("hidden")
 });
 
+function updateScoreCard() {
+  const { human_score, comp_score } = getScores()
+  humanScore.innerHTML = "Player : " + human_score;
+  compScore.innerHTML = "Computer : " + comp_score;
+}
+
+function getScores() {
+
+  let human_score = localStorage.getItem("winByHuman");
+  let comp_score = localStorage.getItem("winByComp");
+  return { human_score, comp_score }
+}
 function loadGame(humanP, compP, diff) {
   human = humanP
   comp = compP
   difficulty = diff;
   isHumansTurn = true;
+
+  if (!getScores().human_score) localStorage.setItem("winByHuman", 0);
+  if (!getScores().comp_score) localStorage.setItem("winByComp", 0);
+  updateScoreCard();
+
+  whosTurn.innerHTML = human == "X" ? XMark : OMark;
   cells.forEach((cell, _i) => {
     cell.addEventListener("click", () => {
       if (isHumansTurn) {
@@ -43,8 +68,6 @@ function loadGame(humanP, compP, diff) {
   })
 }
 
-
-
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -56,14 +79,16 @@ function move(element, player) {
     board[element.id] = player;
 
     if (winning(board, player)) {
+      localStorage.setItem("winByHuman", ++winByHuman);
       setTimeout(function () {
-        alert("YOU WIN");
+        updateScoreCard();
+        showGameoverDialog("You win!!");
         reset();
       }, 500);
       return;
     } else if (round > 8) {
       setTimeout(function () {
-        alert("TIE");
+        showGameoverDialog("Draw!!");
         reset();
       }, 500);
       return;
@@ -77,14 +102,15 @@ function move(element, player) {
         isHumansTurn = true;
         whosTurn.innerHTML = comp == "X" ? OMark : XMark;
         if (winning(board, comp)) {
+          localStorage.setItem("winByComp", ++winByComp)
           setTimeout(function () {
-            alert("YOU LOSE");
-            reset();
+            updateScoreCard();
+            showGameoverDialog("Computer win's, Play again?");
           }, 500);
           return;
         } else if (round === 0) {
           setTimeout(function () {
-            alert("tie");
+            showGameoverDialog("Draw!!");
             reset();
           }, 500);
           return;
@@ -98,7 +124,28 @@ function reset() {
   round = 0;
   board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
   cells.map((cell) => { cell.innerHTML = "" });
-  optionsBackdrop.classList.remove("hidden")
+}
+function openNewgameDialog() {
+  optionsBackdrop.classList.remove("hidden");
+  hideGameoverDialog();
+}
+
+function playAgain() {
+  board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+  loadGame(human, comp, difficulty);
+  hideGameoverDialog();
+}
+
+function showGameoverDialog(msg) {
+  gameoverMsg.innerHTML = msg;
+  gameoverBackdrop.classList.remove("hidden");
+  gameoverBackdrop.classList.add("flex");
+  reset();
+}
+
+function hideGameoverDialog() {
+  gameoverBackdrop.classList.remove("flex");
+  gameoverBackdrop.classList.add("hidden");
 }
 
 function minimax(reboard, player) {
